@@ -1,0 +1,110 @@
+#
+#   VizieR Astronomical Server vizier.cds.unistra.fr
+#    Date: 2024-04-12T19:55:09 [V7.33.3]
+#   In case of problem, please report to:	cds-question@unistra.fr
+#
+#
+#Coosys	J2000:	eq_FK5 J2000
+#INFO	service_protocol=ASU	  IVOID of the protocol through which the data was retrieved
+#INFO	request_date=2024-04-12T19:55:09	  Query execution date
+#INFO	request=https://vizier.cds.unistra.fr/viz-bin/asu-tsv?-oc.form=dec&-c.r=  1&-c.geom=r&-source=J/ApJS/196/11/table2&-order=I&-out=z&-out=Scale&-out=_RA&-out=_DE&-out.max=50&-c.eq=J2000&-c.u=arcsec&	  Full request URL (POST)
+#INFO	contact=cds-question@unistra.fr	  Email or URL to contact publisher
+#INFO	server_software=7.33.3	  Software version
+#INFO	publisher=CDS	  Data centre that produced the VOTable
+#INFO	header_format=mini	
+#INFO	header_format=mini	
+
+#RESOURCE=yCat_21960011
+#Name: J/ApJS/196/11
+#Title: Bulge+disk decompositions of SDSS galaxies (Simard+, 2011)
+#INFO	ivoid=ivo://cds.vizier/j/apjs/196/11	    IVOID of underlying data collection
+#INFO	creator=Simard L.	    First author or institution
+#INFO	cites=bibcode:2011ApJS..196...11S	    Article or Data origin sources
+#INFO	editor=Astrophysical Journal Supplement (AAS)	    Editor name (article)
+#INFO	original_date=2011	    Year of the article publication
+#INFO	reference_url=https://cdsarc.cds.unistra.fr/viz-bin/cat/J/ApJS/196/11	    Dataset landing page
+#INFO	citation=doi:10.26093/cds/vizier.21960011	    Dataset identifier that can be used for citation
+#INFO	publication_date=2017-04-26	    Date of first publication in the data centre
+#INFO	rights_uri=https://cds.unistra.fr/vizier-org/licences_vizier.html	    Licence URI
+#Table	J_ApJS_196_11_table2:
+#Name: J/ApJS/196/11/table2
+#Title: SDSS structural parameters from free n_b_ bulge+disk decompositions
+#Column	z	(F6.4)	? SDSS redshift (spectroscopic if available; or photometric ("-1" in "Sp")	[ucd=src.redshift]
+#Column	Scale	(F7.3)	? Physical scale at redshift z	[ucd=instr.scale]
+#Column	_RA	(F9.5)	Positions from SDSS-DR7 (Cat. II/294) (right ascension part)	[ucd=pos.eq.ra;meta.main]
+#Column	_DE	(F9.5)	Positions from SDSS-DR7 (Cat. II/294) (declination part)	[ucd=pos.eq.dec;meta.main]
+z;Scale;_RA;_DE
+ ;kpc/arcsec;deg;deg
+------;-------;---------;---------
+0.0850;  1.595;195.67571;-03.21051
+
+0.0902;  1.683;333.58793;+00.89241
+
+0.0552;  1.073;348.94746;+01.12616
+
+0.0717;  1.366;006.30749;+00.40769
+
+0.0667;  1.279;148.41358;+62.87990
+
+0.0441;  0.868;139.82427;+54.86141
+
+0.0831;  1.562;241.07318;+49.46286
+
+0.0920;  1.712;339.58610;+13.41281
+
+0.0599;  1.158;117.37897;+30.42682
+
+0.0941;  1.748;152.96749;+54.17686
+
+0.0727;  1.384;163.54326;+54.82739
+
+0.0718;  1.368;147.37512;+42.10689
+
+0.0843;  1.583;153.63694;+45.64697
+
+0.0689;  1.318;170.36843;+58.37640
+
+0.0824;  1.551;177.20804;+10.43267
+
+0.0687;  1.314;153.64166;+08.75057
+
+0.0457;  0.897;156.20473;+09.55964
+
+0.0961;  1.780;226.18026;+35.17824
+
+0.0677;  1.297;234.99807;+35.72233
+
+0.0977;  1.806;163.45555;+40.41987
+
+0.0664;  1.273;199.93221;+47.25910
+
+0.0624;  1.202;206.61568;+45.09836
+
+0.0808;  1.523;230.28079;+29.66538
+
+0.0954;  1.769;244.04048;+32.95798
+
+0.0979;  1.809;122.63938;+07.31736
+
+0.0601;  1.161;214.40049;+08.17914
+
+0.0752;  1.427;229.83670;+07.67648
+
+0.0934;  1.736;211.54102;+06.92287
+
+0.0795;  1.502;229.03015;+29.28061
+
+0.0628;  1.209;193.66834;+30.39861
+
+0.0801;  1.511;227.18293;+27.18221
+
+0.0935;  1.738;132.19122;+14.28881
+
+0.0711;  1.355;173.54646;+25.56065
+
+0.0769;  1.456;204.66564;+15.53028
+
+0.0601;  1.161;182.35563;+20.15580
+
+0.0702;  1.341;193.38269;+24.46004
+
