@@ -17,9 +17,11 @@ basesGM_path=ppxf_path+'/basesGM/'
 
 
 #Elemento recursivo: eliminando o que foi feito com a base anterior
-espectros_anteriores=os.listdir(os.getcwd())
+espectros_anteriores=os.listdir(newbase_path)
+os.chdir(newbase_path)
 for i in espectros_anteriores:
     if i[0]=='M': os.remove(i)
+os.chdir(ppxf_path)
 
 #Primeiro, seleciona-se o slope e a IMF desejada para a nova base.
 slope=float(sys.argv[1])
