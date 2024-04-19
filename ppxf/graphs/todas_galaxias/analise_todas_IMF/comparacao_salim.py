@@ -27,7 +27,7 @@ plt.hist(array_dif_salim,bins=bins, density=True, color = 'xkcd:lightblue',edgec
 plt.plot(array_x_kde_plot, kde(array_x_kde_plot),color='xkcd:blue', label="KDE")
 plt.legend()
 plt.ylabel(r"$\log(M_\ast)$ (Chabrier)")
-plt.xlabel(r"$\log(M_\ast) - \log(M_{Salim}$")
+plt.xlabel(r"$\log(M_\ast) - \log(M_{Salim})$")
 plt.savefig('histograma_final_ch.jpg', dpi=900)
 
 plt.figure(figsize=(6,6))

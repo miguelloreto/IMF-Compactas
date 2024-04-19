@@ -1,0 +1,14 @@
+./spectra/                                 # Obs directory
+./basesGM/                                 # Base directory
+./output/                                  # Output directory
+BaseGM_LCGs                                # Base file
+28                                         # Number of ages in basis grid
+4                                          # Number of metallicities in basis grid
+2.51                                       # Resolution of SSP spectra (Vazdekis+10 --> FWHM of 2.51A.)
+3800                                       # Lower wavelength limit for fit
+6900                                       # Upper wavelength limit for fit
+5600                                       # Normalization wavelength
+2.76                                       # Instrumental resolution of observed spectrum (SDSS --> FWHM of 2.76A)
+0.1                                        # REGUL_err
+0                                          # REGUL
+1                                          # Number of gas components (0, 1 or 2)

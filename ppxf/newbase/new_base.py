@@ -2,6 +2,7 @@
 import os 
 import numpy as np
 import shutil
+import sys
 
 # Programa que cria um arquivo de base chamado "BaseGM_LCGs" e deixa o ppxf pronto para rodar com uma nova base de arquivos.
 # Usa os espectros baixados do MILES e uma tabela de massas remanescentes, os dois em uma pasta chamada newbase.
@@ -10,11 +11,10 @@ import shutil
 
 
 #Lidando com caminhos de diretório:
-newbase_path=os.getcwd()
-ppxf_path=list(newbase_path.split('/'))
-ppxf_path.pop()
-ppxf_path='/'.join(ppxf_path)
+ppxf_path=os.getcwd()
+newbase_path=ppxf_path +'/newbase/'
 basesGM_path=ppxf_path+'/basesGM/'
+
 
 #Elemento recursivo: eliminando o que foi feito com a base anterior
 espectros_anteriores=os.listdir(os.getcwd())
@@ -22,8 +22,8 @@ for i in espectros_anteriores:
     if i[0]=='M': os.remove(i)
 
 #Primeiro, seleciona-se o slope e a IMF desejada para a nova base.
-slope=1.3
-imf_type='ch'
+slope=float(sys.argv[1])
+imf_type=sys.argv[2]
 #Depois, olhamos para as bases possíveis no basesGM:
 espectros_possiveis=os.listdir(basesGM_path)
 for i in espectros_possiveis:
@@ -35,7 +35,9 @@ for i in espectros_possiveis:
 if (len(espectros_possiveis) == 0): raise("A base de dados não contém esse slope")
 
 # Cria o novo arquivo das bases no diretório newbase
+os.chdir(newbase_path)
 base=open('BaseGM_LCGs', 'w')
+os.chdir(ppxf_path)
 # Guarda o nome dos espectros no newbase. Esses serão os espectros utilizados para fazermos nossa base.
 espectros=os.listdir(newbase_path)
 for i in espectros:
@@ -211,7 +213,7 @@ dirppxf=os.listdir(ppxf_path)
 for i in dirppxf:
     if i == 'BaseGM_LCGs':
         os.remove(ppxf_path +'/'+ i)
-shutil.move(newbase_path+'/BaseGM_LCGs', ppxf_path)
+shutil.move(newbase_path+'BaseGM_LCGs', ppxf_path)
 
 # Os especrtros que vão servir de base estão na pasta basesGM, então tenho que passar todos os espectros da minha nova base para lá.
 # Mas o programa roda só com os espectros selecionados pelo arquivo BasesGM_LCGs
