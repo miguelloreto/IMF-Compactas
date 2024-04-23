@@ -121,12 +121,12 @@ for i in outputs:
 
 check_dir=False
 for j in outputs: 
-    if(j=='output_regul10_total-'+str(slope)): check_dir=True
-if(check_dir==False): os.mkdir("output_regul10_total-" + str(slope))
+    if(j=='output_regul0_total-'+str(slope)): check_dir=True
+if(check_dir==False): os.mkdir("output_regul0_total-" + str(slope))
 
 for k in outputs:
     k=k.split("-")
-    if(k[0]=='spec'):shutil.move("-".join(k),'output_regul10_total-'+str(slope))
+    if(k[0]=='spec'):shutil.move("-".join(k),'output_regul0_total-'+str(slope))
 
 #Re-Normalizando:
 fator_norm=np.array(fator_norm_spectra)/np.array(fator_norm_ppxf)
@@ -219,7 +219,7 @@ tabela_massas['Mcor']=np.log10(tabela_massas['Mcor'])
 
 
 #Escrevendo arquivos na pasta dos gráficos:
-os.chdir(ppxf_path + '/graphs/todas_galaxias/analise_todas_IMF')
+os.chdir(ppxf_path + '/graphs/todas_galaxias/analise_todas_IMF/regul0')
 tabela_massas.to_csv('nomes_amostra_total.csv', index=False, columns=['Nome'], header='Nomes')
 tabela_massas.to_csv('massas_{}_amostra_total.csv'.format(slope), index=False, columns=['Nome',"Mcor"], header=['Nome',str(slope)])
 #if (slope==1.3): tabela_massas.to_csv('comparar_salim.csv'.format(slope),index=False, columns=['Nome', 'Mcor'], header=['Amostra', 'Mcor'])
