@@ -16,10 +16,12 @@ def Kn (n):
 def escolhe_raiz(raizes):
     #Função que escolhe a raiz positiva de duas soluções da equação do segundo grau em forma de vetor
     if(type(raizes[0])==np.complex128 and type(raizes[1])==np.complex128): return 0
-    elif(raizes[1]>raizes[0] and raizes[1]>0): return raizes[1]
-    elif(raizes[0]>raizes[1] and raizes[0]>0): return raizes[0]
+    elif(raizes[1]>raizes[0]):
+        return raizes[1]
+    elif(raizes[0]>raizes[1]): 
+        return raizes[0]
     else:
-        print(raizes)
+        #print(raizes)
         return 0
 def cria_bins(dados):
     #Cria o número de bins apropriado para dos dados
@@ -62,6 +64,7 @@ massas_dinamicas=np.array(tabela_mdyn["Mdyn"])
 limsup=[]
 flag=0
 
+'#Problema: todos são acusados como imaginarios, i.e., lim==0, problema deve ser na função escolhe_raizes'
 for i in range(0, len(tabela_mdyn)):
     y=np.array(tabela_mestelar.loc[i])
     abc=np.polyfit(x, y, deg=2)
@@ -69,7 +72,8 @@ for i in range(0, len(tabela_mdyn)):
     abc[2]=abc[2]-massas_dinamicas[i]
     raizes=np.roots(abc)
     lim=float(escolhe_raiz(raizes))
-    if(lim == 0):
+    '''
+    if(lim <= 0):
         xis=np.arange(0, x[-1], 0.001)
         plt.figure(figsize=(6,6))
         plt.scatter(x,np.array(y), color='xkcd:azure', s=6, label= 'Massa Calculada')
@@ -80,12 +84,14 @@ for i in range(0, len(tabela_mdyn)):
         plt.legend()
         plt.grid()
         plt.savefig('fit_example'+ str(tabela_mdyn['aid'][i]) +'.jpg', dpi=500)
+    '''
     limsup.append(lim)
 
 tabela_mdyn.insert(12, "lim_sup", limsup)
 tabela_mestelar.insert(0,column="Nome",value=nomes)
-tabela_contaminantes=tabela_mdyn[tabela_mdyn['lim_sup'] == 0]
+tabela_contaminantes=tabela_mdyn[tabela_mdyn['lim_sup'] <= 0]
 tabela_mdyn=tabela_mdyn[tabela_mdyn['lim_sup'] != 0]
+print(tabela_contaminantes)
 '''
 plt.figure(figsize=(5,5))
 plt.scatter(np.array(tabela_mdyn["log_M"]), np.array(tabela_mdyn["lim_sup"]), color='xkcd:azure', s=0.9)
