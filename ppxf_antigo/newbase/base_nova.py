@@ -9,22 +9,23 @@ import shutil
 # O formato do arquivo de bases se dá em 4 colunas: nome do espectro, idade, metalicidade e massa remascente.
 
 
-ppxf_path=os.getcwd() +'/ppxf/'
-newbase_path=ppxf_path + 'newbase/'
-basesGM_path=ppxf_path + 'basesGM/'
+ppxf_path=os.getcwd()
+newbase_path=ppxf_path + '/newbase/'
+basesGM_path=ppxf_path + '/basesGM/'
 #Elemento recursivo: eliminando o que foi feito com a base anterior
 espectros_anteriores=os.listdir(newbase_path)
 for i in espectros_anteriores:
     if i[0]=='M': os.remove(newbase_path+i)
 
 #Primeiro, seleciona-se o slope desejado para a nova base.
-slope=0.8
+slope=1.3
 #Depois, olhamos para as bases possíveis no basesGM:
 espectros_possiveis=os.listdir(basesGM_path)
 for i in espectros_possiveis:
     if(i[0]!='M'):
         continue
     if(float(i[3:7])==slope):
+        print('here')
         shutil.copy(basesGM_path + i, newbase_path)
 
 if (len(espectros_possiveis) == 0): raise("A base de dados não contém esse slope")
@@ -34,7 +35,7 @@ base=open(newbase_path+'BaseGM_LCGs', 'w')
 # Guarda o nome dos espectros no newbase. Esses serão os espectros utilizados para fazermos nossa base.
 espectros=os.listdir(newbase_path)
 for i in espectros:
-    if i[0]!='M':
+    if (i[0]!='M'):
         espectros.remove(i)
     else:
         continue

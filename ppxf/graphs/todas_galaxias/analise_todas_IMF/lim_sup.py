@@ -64,7 +64,7 @@ massas_dinamicas=np.array(tabela_mdyn["Mdyn"])
 limsup=[]
 flag=0
 
-'#Problema: todos são acusados como imaginarios, i.e., lim==0, problema deve ser na função escolhe_raizes'
+'#Problema: todos são acusados como imaginarios, i.e., lim==0, problema deve ser na função escolhe_raizes HAHAHAHAAHAH'
 for i in range(0, len(tabela_mdyn)):
     y=np.array(tabela_mestelar.loc[i])
     abc=np.polyfit(x, y, deg=2)
@@ -91,20 +91,25 @@ tabela_mdyn.insert(12, "lim_sup", limsup)
 tabela_mestelar.insert(0,column="Nome",value=nomes)
 tabela_contaminantes=tabela_mdyn[tabela_mdyn['lim_sup'] <= 0]
 tabela_mdyn=tabela_mdyn[tabela_mdyn['lim_sup'] != 0]
-print(tabela_contaminantes)
-'''
+r_pearson_massa=tabela_mdyn["log_M"].astype(float).corr(tabela_mdyn['lim_sup'].astype(float), method='pearson')
+r_pearson_sigma=tabela_mdyn["sigma_e"].astype(float).corr(tabela_mdyn['lim_sup'].astype(float), method='pearson')
+tau_kendall_massa=tabela_mdyn["log_M"].astype(float).corr(tabela_mdyn['lim_sup'].astype(float), method='kendall')
+tau_kendall_sigma=tabela_mdyn["sigma_e"].astype(float).corr(tabela_mdyn['lim_sup'].astype(float), method='kendall')
+
 plt.figure(figsize=(5,5))
-plt.scatter(np.array(tabela_mdyn["log_M"]), np.array(tabela_mdyn["lim_sup"]), color='xkcd:azure', s=0.9)
+plt.scatter(np.array(tabela_mdyn["log_M"]), np.array(tabela_mdyn["lim_sup"]), color='xkcd:azure', s=0.9,label=r'MCGs, r={0:.2f}, $\tau={0:.2f}$ '.format(r_pearson_massa, tau_kendall_massa))
 plt.title("Limite Superior IMF x $M_{*}$")
 plt.ylabel("Limite Superior IMF")
 plt.xlabel("$\log(M_{*})$ ($M_{\odot}$)")
+plt.legend()
 plt.savefig('plot_comparativo_LIMSUPXMESTELAR.jpg', dpi=900)
 
 plt.figure(figsize=(5,5))
-plt.scatter(np.array(tabela_mdyn["sigma_e"]), np.array(tabela_mdyn["lim_sup"]), color='xkcd:azure', s=0.9)
+plt.scatter(np.array(tabela_mdyn["sigma_e"]), np.array(tabela_mdyn["lim_sup"]), color='xkcd:azure', s=0.9, label=r'MCGs, r={0:.2f}, $\tau={0:.2f}$'.format(r_pearson_sigma, tau_kendall_sigma))
 plt.title("Limite Superior IMF x $\sigma$")
 plt.ylabel("Limite Superior IMF")
 plt.xlabel("$\sigma$ (km/s)")
+plt.legend()
 plt.savefig('plot_comparativo_LIMSUPXDISPVELOCIDADE.jpg', dpi=900)
 
 plt.figure(figsize=(5,5))
@@ -117,4 +122,3 @@ plt.xlabel("Limites Superiors")
 plt.savefig('histograma_limsup.jpg', dpi=900)
 
 tabela_contaminantes.to_csv("contaminates.csv", index=False)
-'''
