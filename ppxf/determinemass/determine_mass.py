@@ -10,6 +10,12 @@ c = 299792
 #Qual foi o slope utilizado ao construir as bases?
 slope_esperado=float(sys.argv[1])
 
+#Qual foi o regul utilizado no ppxf?
+regul=10
+
+#Qual foi a amostra utilizda?
+amostra = 'csgs'
+
 def calcula_media_ponderada(lista, peso):
     '''Calcula a media ponderda de uma lista[N] sendo que cada elemento tem peso peso[N]'''
     if(len(lista)!=len(peso)):
@@ -53,10 +59,10 @@ def calcula_cosmodist(z, h_0, omega_l, omega_m, type_z, dz=1e-6):
 ppxf_path=os.getcwd()
 determinemass_path=ppxf_path + '/determinemass'
 output_path=ppxf_path + '/output'
+amostra_path= output_path + '/' + amostra
 spectra_path=ppxf_path + '/spectra'
 os.chdir(determinemass_path) 
-#tabela_propriedades=pd.read_csv("table_compact_stellar_population_properties.csv")
-tabela_mags=pd.read_csv("table_csgs_cassjobs_mags.csv")
+tabela_mags=pd.read_csv("table_"+amostra+"_cassjobs_mags")
 os.chdir(ppxf_path) 
 tabela_bases=open('BaseGM_LCGs', 'r')
 
@@ -119,14 +125,24 @@ for i in outputs:
     else:
         continue
 
-check_dir=False
-for j in outputs: 
-    if(j=='output_regul100_total-'+str(slope)): check_dir=True
-if(check_dir==False): os.mkdir("output_regul100_total-" + str(slope))
+#Movendo os arquivos para bons lugares:
 
-for k in outputs:
+for i in outputs:
+    i=i.split("-")
+    if(i[0]=='spec'):shutil.move("-".join(i), amostra_path)
+
+os.chdir(amostra_path)
+outputs_amostra=os.listdir(amostra_path)
+outputs_amostra.sort()
+
+check_dir=False
+for j in outputs_amostra: 
+    if(j=='output_regul'+regul+'_total-'+str(slope)): check_dir=True
+if(check_dir==False): os.mkdir("output_regul"+regul+"_total-" + str(slope))
+
+for k in outputs_amostra:
     k=k.split("-")
-    if(k[0]=='spec'):shutil.move("-".join(k),'output_regul100_total-'+str(slope))
+    if(k[0]=='spec'):shutil.move("-".join(k),'output_regul'+regul+'_total-'+str(slope))
 
 #Re-Normalizando:
 fator_norm=np.array(fator_norm_spectra)/np.array(fator_norm_ppxf)
@@ -219,7 +235,7 @@ tabela_massas['Mcor']=np.log10(tabela_massas['Mcor'])
 
 
 #Escrevendo arquivos na pasta dos gráficos:
-os.chdir(ppxf_path + '/graphs/todas_galaxias/analise_todas_IMF/regul100')
+os.chdir(ppxf_path + '/graphs/todas_galaxias/ '+ amostra + ' /regul' + regul)
 tabela_massas.to_csv('nomes_amostra_total.csv', index=False, columns=['Nome'], header='Nomes')
 tabela_massas.to_csv('massas_{}_amostra_total.csv'.format(slope), index=False, columns=['Nome',"Mcor"], header=['Nome',str(slope)])
 #if (slope==1.3): tabela_massas.to_csv('comparar_salim.csv'.format(slope),index=False, columns=['Nome', 'Mcor'], header=['Amostra', 'Mcor'])

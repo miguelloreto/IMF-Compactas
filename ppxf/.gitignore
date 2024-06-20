@@ -1,0 +1,8 @@
+# Ignorar arquivos
+
+
+# Zipados:
+*.zip
+**/*.zip
+*.tar
+**/*.tar
