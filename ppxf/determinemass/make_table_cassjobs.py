@@ -1,6 +1,6 @@
 import pandas as pd
 
-tabela_propriedades=pd.read_csv("table_compact_stellar_population_properties.csv")
+tabela_propriedades=pd.read_csv("table_csgs_sp_properties.csv")
 
 plate=[]
 mjd=[]

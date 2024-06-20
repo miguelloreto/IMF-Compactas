@@ -31,7 +31,7 @@ def cria_bins(dados):
     return int((max-min)/(dp*0.5))
 
 #Lendo arquivos e montando o dataframe
-os.chdir(os.getcwd()+'/regul0')
+os.chdir(os.getcwd()+'/regul100')
 direstelarmasses=list(os.listdir(os.getcwd()))
 direstelarmasses.sort()
 tabela_mestelar=pd.DataFrame()

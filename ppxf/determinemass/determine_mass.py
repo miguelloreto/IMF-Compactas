@@ -55,8 +55,8 @@ determinemass_path=ppxf_path + '/determinemass'
 output_path=ppxf_path + '/output'
 spectra_path=ppxf_path + '/spectra'
 os.chdir(determinemass_path) 
-tabela_propriedades=pd.read_csv("table_compact_stellar_population_properties.csv")
-tabela_mags=pd.read_csv("myTable1_out_miguel_loreto.csv")
+#tabela_propriedades=pd.read_csv("table_compact_stellar_population_properties.csv")
+tabela_mags=pd.read_csv("table_csgs_cassjobs_mags.csv")
 os.chdir(ppxf_path) 
 tabela_bases=open('BaseGM_LCGs', 'r')
 
