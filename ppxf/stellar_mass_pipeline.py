@@ -4,7 +4,7 @@ import configparser
 
 def main():
     
-    slopes=[1.3, 1.5, 1.8, 2.3, 2.8, 3.3]
+    slopes=[2.8]
     imf_type='bi'
     for i in slopes:
         os.system('python newbase/new_base.py {} {}'.format(i, imf_type))

@@ -1,6 +1,11 @@
 # Ignorar arquivos
 
 
+# Imagens:
+
+*.png
+**/*.png
+
 # Zipados:
 *.zip
 **/*.zip

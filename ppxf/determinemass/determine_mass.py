@@ -11,16 +11,19 @@ c = 299792
 slope_esperado=float(sys.argv[1])
 
 #Qual foi o regul utilizado no ppxf?
-regul=10
+regul=100
 
 #Qual foi a amostra utilizda?
 amostra = 'csgs'
+
+cortadas_mcgs=['spec-0303-51615-0278']
+#Quais galáxias tem seu espectro cortados (output do ppxf vai ser diferente):
+cortadas=['spec-0544-52201-0278','spec-0656-52148-0523', 'spec-0848-52669-0279', 'spec-1417-53141-0522', 'spec-1671-53446-0522', 'spec-1694-53472-0278']
 
 def calcula_media_ponderada(lista, peso):
     '''Calcula a media ponderda de uma lista[N] sendo que cada elemento tem peso peso[N]'''
     if(len(lista)!=len(peso)):
         raise Exception()
-
     media= (peso*lista).sum()/peso.sum()
     return media
 
@@ -62,7 +65,7 @@ output_path=ppxf_path + '/output'
 amostra_path= output_path + '/' + amostra
 spectra_path=ppxf_path + '/spectra'
 os.chdir(determinemass_path) 
-tabela_mags=pd.read_csv("table_"+amostra+"_cassjobs_mags")
+tabela_mags=pd.read_csv("table_"+amostra+"_cassjobs_mags.csv")
 os.chdir(ppxf_path) 
 tabela_bases=open('BaseGM_LCGs', 'r')
 
@@ -102,7 +105,7 @@ outputs.sort()
 for i in outputs:
     i=i.split(".")
     if (i[-1] == 'out'):
-        if(i[0] == 'spec-0303-51615-0278'):
+        if(i[0] in cortadas):
             selecionado='.'.join(i)
             spec=open(output_path+'/'+ selecionado, 'r')
             linhas=spec.readlines()
@@ -125,8 +128,9 @@ for i in outputs:
     else:
         continue
 
-#Movendo os arquivos para bons lugares:
+if(len(fator_norm_ppxf) > 5574): raise Exception('sei la cara')
 
+#Movendo os arquivos para bons lugares:
 for i in outputs:
     i=i.split("-")
     if(i[0]=='spec'):shutil.move("-".join(i), amostra_path)
@@ -137,12 +141,12 @@ outputs_amostra.sort()
 
 check_dir=False
 for j in outputs_amostra: 
-    if(j=='output_regul'+regul+'_total-'+str(slope)): check_dir=True
-if(check_dir==False): os.mkdir("output_regul"+regul+"_total-" + str(slope))
+    if(j=='output_regul'+str(regul)+'_total-'+str(slope)): check_dir=True
+if(check_dir==False): os.mkdir("output_regul"+str(regul)+"_total-" + str(slope))
 
 for k in outputs_amostra:
     k=k.split("-")
-    if(k[0]=='spec'):shutil.move("-".join(k),'output_regul'+regul+'_total-'+str(slope))
+    if(k[0]=='spec'):shutil.move("-".join(k), amostra_path+'/output_regul'+str(regul)+'_total-'+str(slope))
 
 #Re-Normalizando:
 fator_norm=np.array(fator_norm_spectra)/np.array(fator_norm_ppxf)
@@ -235,7 +239,7 @@ tabela_massas['Mcor']=np.log10(tabela_massas['Mcor'])
 
 
 #Escrevendo arquivos na pasta dos gráficos:
-os.chdir(ppxf_path + '/graphs/todas_galaxias/ '+ amostra + ' /regul' + regul)
+os.chdir(ppxf_path + '/graphs/todas_galaxias/'+ amostra + '/regul' + str(regul))
 tabela_massas.to_csv('nomes_amostra_total.csv', index=False, columns=['Nome'], header='Nomes')
 tabela_massas.to_csv('massas_{}_amostra_total.csv'.format(slope), index=False, columns=['Nome',"Mcor"], header=['Nome',str(slope)])
 #if (slope==1.3): tabela_massas.to_csv('comparar_salim.csv'.format(slope),index=False, columns=['Nome', 'Mcor'], header=['Amostra', 'Mcor'])

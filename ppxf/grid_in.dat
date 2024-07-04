@@ -10,5 +10,5 @@ BaseGM_LCGs                                # Base file
 5600                                       # Normalization wavelength
 2.76                                       # Instrumental resolution of observed spectrum (SDSS --> FWHM of 2.76A)
 0.1                                        # REGUL_err
-10                                         # REGUL
+100                                        # REGUL
 1                                          # Number of gas components (0, 1 or 2)
