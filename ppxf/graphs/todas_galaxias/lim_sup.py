@@ -28,7 +28,7 @@ def escolhe_raiz(raizes):
 regul=100
 
 #Qual foi a amostra utilizda?
-amostra = 'mcgs'
+amostra = 'csgs'
 
 initial_path=os.getcwd()
 amostra_path=initial_path+'/'+amostra

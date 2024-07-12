@@ -128,8 +128,6 @@ for i in outputs:
     else:
         continue
 
-if(len(fator_norm_ppxf) > 5574): raise Exception('sei la cara')
-
 #Movendo os arquivos para bons lugares:
 for i in outputs:
     i=i.split("-")
