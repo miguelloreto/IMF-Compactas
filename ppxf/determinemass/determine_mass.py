@@ -11,10 +11,10 @@ c = 299792
 slope_esperado=float(sys.argv[1])
 
 #Qual foi o regul utilizado no ppxf?
-regul=100
+regul=10
 
 #Qual foi a amostra utilizda?
-amostra = 'csgs'
+amostra = 'mcgs'
 
 cortadas_mcgs=['spec-0303-51615-0278']
 #Quais galáxias tem seu espectro cortados (output do ppxf vai ser diferente):
@@ -58,17 +58,19 @@ def calcula_cosmodist(z, h_0, omega_l, omega_m, type_z, dz=1e-6):
     else:
         raise TypeError("Z deve ser uma lista ou um float!")
 
+print('oi')
 #Lendo arquivos:
 ppxf_path=os.getcwd()
 determinemass_path=ppxf_path + '/determinemass'
 output_path=ppxf_path + '/output'
 amostra_path= output_path + '/' + amostra
+print('oi')
 spectra_path=ppxf_path + '/spectra'
 os.chdir(determinemass_path) 
 tabela_mags=pd.read_csv("table_"+amostra+"_cassjobs_mags.csv")
 os.chdir(ppxf_path) 
 tabela_bases=open('BaseGM_LCGs', 'r')
-
+print('oi')
 # Assumindo que no BasesGM todos tem o mesmo slope e todos estao no formato do MILES (assumir isso é ok porque eu que criei o arquivo):
 for i in tabela_bases:
     i=i.split()
@@ -99,7 +101,7 @@ nome_espectros=[]
 mcor=[]
 mini=[]
 fator_norm_ppxf=[]
-
+print('oi')
 outputs=os.listdir(output_path)
 outputs.sort()
 for i in outputs:
@@ -127,24 +129,24 @@ for i in outputs:
             nome_espectros.append(selecionado)
     else:
         continue
-
+print('oi')
 #Movendo os arquivos para bons lugares:
-for i in outputs:
-    i=i.split("-")
-    if(i[0]=='spec'):shutil.move("-".join(i), amostra_path)
+#for i in outputs:
+#    i=i.split("-")
+#    if(i[0]=='spec'):shutil.move("-".join(i), amostra_path)
 
-os.chdir(amostra_path)
-outputs_amostra=os.listdir(amostra_path)
-outputs_amostra.sort()
+#os.chdir(amostra_path)
+#outputs_amostra=os.listdir(amostra_path)
+#outputs_amostra.sort()
 
-check_dir=False
-for j in outputs_amostra: 
-    if(j=='output_regul'+str(regul)+'_total-'+str(slope)): check_dir=True
-if(check_dir==False): os.mkdir("output_regul"+str(regul)+"_total-" + str(slope))
+#check_dir=False
+#for j in outputs_amostra: 
+#    if(j=='output_regul'+str(regul)+'_total-'+str(slope)): check_dir=True
+#if(check_dir==False): os.mkdir("output_regul"+str(regul)+"_total-" + str(slope))
 
-for k in outputs_amostra:
-    k=k.split("-")
-    if(k[0]=='spec'):shutil.move("-".join(k), amostra_path+'/output_regul'+str(regul)+'_total-'+str(slope))
+#for k in outputs_amostra:
+#    k=k.split("-")
+#    if(k[0]=='spec'):shutil.move("-".join(k), amostra_path+'/output_regul'+str(regul)+'_total-'+str(slope))
 
 #Re-Normalizando:
 fator_norm=np.array(fator_norm_spectra)/np.array(fator_norm_ppxf)
@@ -153,7 +155,7 @@ mcor=np.array(mcor)*fator_norm
 
 tabela_massas=pd.DataFrame(index=[i for i in range(0,len(lista_df_espectros))], columns=['Nome', 'Slope', 'Idade Média(L)', 'Idade Média Log(L)', 'Metalicidade Média(L)', 'Metalicidade Média Log(L)' 'Idade Média(M)', 'Idade Média Log(M)', 'Metalicidade Média(M)', 'Metalicidade Média Log(M)' , 'Mcor', 'Mini'])
 
-
+print('oi')
 os.chdir(determinemass_path)
 #Certamente tem um jeito melhor de fazer esse processo, OH WELL...
 idade_media_luminosidade=[]
@@ -237,8 +239,9 @@ tabela_massas['Mcor']=np.log10(tabela_massas['Mcor'])
 
 
 #Escrevendo arquivos na pasta dos gráficos:
-os.chdir(ppxf_path + '/graphs/todas_galaxias/'+ amostra + '/regul' + str(regul))
-tabela_massas.to_csv('nomes_amostra_total.csv', index=False, columns=['Nome'], header='Nomes')
-tabela_massas.to_csv('massas_{}_amostra_total.csv'.format(slope), index=False, columns=['Nome',"Mcor"], header=['Nome',str(slope)])
-#if (slope==1.3): tabela_massas.to_csv('comparar_salim.csv'.format(slope),index=False, columns=['Nome', 'Mcor'], header=['Amostra', 'Mcor'])
+#os.chdir(ppxf_path + '/graphs/todas_galaxias/'+ amostra + '/regul' + str(regul))
+#tabela_massas.to_csv('nomes_amostra_total.csv', index=False, columns=['Nome'], header='Nomes')
+#tabela_massas.to_csv('massas_{}_amostra_total.csv'.format(slope), index=False, columns=['Nome',"Mcor"], header=['Nome',str(slope)])
+os.chdir(ppxf_path+"graphs/todas_galaxias/analise_slope_1.3_salim")
+tabela_massas.to_csv('comparar_salim.csv'.format(slope),index=False, columns=['Nome', 'Mcor'], header=['Amostra', 'Mcor'])
 #Opção para comparar com as massas do salim

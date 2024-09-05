@@ -75,7 +75,7 @@ for i in range(0, len(tabela_mdyn)):
     raizes=np.roots(abc)
     lim=float(escolhe_raiz(raizes))
     '''
-    if(lim <= 0):
+    if(lim > 0):
         xis=np.arange(0, x[-1], 0.001)
         plt.figure(figsize=(6,6))
         plt.scatter(x,np.array(y), color='xkcd:azure', s=6, label= 'Massa Calculada')
@@ -85,7 +85,7 @@ for i in range(0, len(tabela_mdyn)):
         plt.xlabel("Slope IMF")
         plt.legend()
         plt.grid()
-        plt.savefig('fit_example'+ str(tabela_mdyn['aid'][i]) +'.jpg', dpi=500)
+        plt.savefig('fit_example'+ + str(tabela_mdyn['aid'][i]) +'.jpg', dpi=500)
     '''
     limsup.append(lim)
 

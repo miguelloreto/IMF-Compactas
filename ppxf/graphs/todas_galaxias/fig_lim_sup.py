@@ -2,9 +2,10 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 import os
+import scipy
 
 #Em qual regul quer-se fazer o gráfico?
-regul=100
+regul=10
 
 def cria_bins(dados):
     #Cria o número de bins apropriado para dos dados
@@ -13,7 +14,14 @@ def cria_bins(dados):
     dp=dados.std()
     return int((max-min)/(dp*0.5))
 
-n_bins=8
+def kde_line(dataframe):
+    difmax=dataframe["lim_sup"].max()
+    difmin=dataframe["lim_sup"].min()
+    kde=scipy.stats.gaussian_kde(np.array(dataframe["lim_sup"]))
+    array_x_kde_plot=np.linspace(difmin, difmax, 1000)
+    return array_x_kde_plot, kde(array_x_kde_plot)
+
+n_bins=15
 
 initial_path=os.getcwd()
 mcgs_path=initial_path+'/mcgs/regul'+str(regul)
@@ -24,6 +32,8 @@ tabela_mcgs_ls=tabela_mcgs_ls[tabela_mcgs_ls['lim_sup']  < 5]
 os.chdir(csgs_path)
 tabela_csgs_ls=pd.read_csv("tabela_lim_sup.csv")
 tabela_csgs_ls=tabela_csgs_ls[tabela_csgs_ls['lim_sup']  < 5]
+
+ks=scipy.stats.ks_2samp(np.array(tabela_mcgs_ls['lim_sup']), np.array(tabela_csgs_ls['lim_sup']))
 
 r_pearson_massa_mcgs=tabela_mcgs_ls["log_M"].astype(float).corr(tabela_mcgs_ls['lim_sup'].astype(float), method='pearson')
 r_pearson_sigma_mcgs=tabela_mcgs_ls["sigma_e"].astype(float).corr(tabela_mcgs_ls['lim_sup'].astype(float), method='pearson')
@@ -57,14 +67,17 @@ plt.xlabel("$\log(\sigma)$ (km/s)")
 plt.legend()
 plt.savefig('limsupxlogsigma_'+str(regul)+'.jpg', dpi=900)
 
-plt.figure(figsize=(5,5))
-plt.hist(np.array(tabela_mcgs_ls['lim_sup']),bins=n_bins, density=True, color = 'xkcd:lightblue',edgecolor='black', label='Distribuição')
-plt.axvline(tabela_mcgs_ls['lim_sup'].mean(), color='xkcd:indigo', ls='dashed', label="Média MCGs")
-plt.hist(np.array(tabela_csgs_ls['lim_sup']),bins=n_bins, density=True, color = 'xkcd:cherry',edgecolor='black', label='Distribuição')
-plt.axvline(tabela_csgs_ls['lim_sup'].mean(), color='xkcd:salmon', ls='dashed', label="Média CSGs")
+plt.rcParams.update({'font.size': 15})
+plt.figure(figsize=(8,8))
+plt.hist(np.array(tabela_mcgs_ls['lim_sup']),bins=n_bins, density=True, color = 'xkcd:cherry',edgecolor='black', label='Distribuição MCGs')
+plt.axvline(tabela_mcgs_ls['lim_sup'].mean(), color='xkcd:salmon', ls='dashed', label="Média MCGs",linewidth = 3)
+plt.hist(np.array(tabela_csgs_ls['lim_sup']),bins=n_bins, density=True, color = 'xkcd:green',edgecolor='black', label='Distribuição CSGs', alpha=0.7)
+plt.axvline(tabela_csgs_ls['lim_sup'].mean(), color='xkcd:lightgreen', ls='dashed', label="Média CSGs", linewidth = 3)
+plt.plot([], [], ' ', label=r"KS p-value < {0:.0e}".format(1e-10))
 plt.legend()
-plt.xlim([0,5])
-#plt.plot(array_x_kde_plot, kde(array_x_kde_plot),color='xkcd:blue', label="KDE")
+plt.xlim([0,4])
+plt.plot(kde_line(tabela_mcgs_ls)[0],kde_line(tabela_mcgs_ls)[1],color='xkcd:salmon', label="KDE MCGs", linewidth = 3)
+plt.plot(kde_line(tabela_csgs_ls)[0],kde_line(tabela_csgs_ls)[1],color='xkcd:lightgreen', label="KDE CSGs", linewidth = 3)
 plt.ylabel("Frequência")
-plt.xlabel("Limites Superiors")
-plt.savefig('histograma_'+str(regul)+'.jpg', dpi=900)
+plt.xlabel(r"$\Gamma_{max}$")
+plt.savefig('histograma_'+str(regul)+'.png', dpi=900)
