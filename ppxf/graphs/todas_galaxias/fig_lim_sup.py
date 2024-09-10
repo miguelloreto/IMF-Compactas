@@ -56,18 +56,27 @@ ks=scipy.stats.ks_2samp(np.array(tabela_mcgs_ls['lim_sup']), np.array(tabela_csg
 
 r_pearson_massa_mcgs=tabela_mcgs_ls["log_M"].astype(float).corr(tabela_mcgs_ls['lim_sup'].astype(float), method='pearson')
 r_pearson_sigma_mcgs=tabela_mcgs_ls["sigma_e"].astype(float).corr(tabela_mcgs_ls['lim_sup'].astype(float), method='pearson')
+r_pearson_dyn_mcgs=tabela_mcgs_ls['Mdyn'].astype(float).corr(tabela_mcgs_ls['lim_sup'].astype(float), method='pearson')
 tau_kendall_massa_mcgs=tabela_mcgs_ls["log_M"].astype(float).corr(tabela_mcgs_ls['lim_sup'].astype(float), method='kendall')
 tau_kendall_sigma_mcgs=tabela_mcgs_ls["sigma_e"].astype(float).corr(tabela_mcgs_ls['lim_sup'].astype(float), method='kendall')
+tau_kendall_dyn_mcgs=tabela_mcgs_ls["Mdyn"].astype(float).corr(tabela_mcgs_ls['lim_sup'].astype(float), method='kendall')
+
 
 r_pearson_massa_csgs=tabela_csgs_ls["log_M"].astype(float).corr(tabela_csgs_ls['lim_sup'].astype(float), method='pearson')
 r_pearson_sigma_csgs=tabela_csgs_ls["sigma_e"].astype(float).corr(tabela_csgs_ls['lim_sup'].astype(float), method='pearson')
+r_pearson_dyn_csgs=tabela_csgs_ls["Mdyn"].astype(float).corr(tabela_csgs_ls['lim_sup'].astype(float), method='pearson')
 tau_kendall_massa_csgs=tabela_csgs_ls["log_M"].astype(float).corr(tabela_csgs_ls['lim_sup'].astype(float), method='kendall')
 tau_kendall_sigma_csgs=tabela_csgs_ls["sigma_e"].astype(float).corr(tabela_csgs_ls['lim_sup'].astype(float), method='kendall')
+tau_kendall_dyn_csgs=tabela_csgs_ls["Mdyn"].astype(float).corr(tabela_csgs_ls['lim_sup'].astype(float), method='kendall')
+
+
 
 mcgs_m=get_binned(tabela_mcgs_ls, n_bins_rel, 'log_M')
 csgs_m=get_binned(tabela_csgs_ls, n_bins_rel, 'log_M')
 mcgs_s=get_binned(tabela_mcgs_ls, n_bins_rel, 'sigma_e')
 csgs_s=get_binned(tabela_csgs_ls, n_bins_rel, 'sigma_e')
+mcgs_d=get_binned(tabela_mcgs_ls, n_bins_rel, 'Mdyn')
+csgs_d=get_binned(tabela_csgs_ls, n_bins_rel, 'Mdyn')
 
 os.chdir(initial_path)
 
@@ -107,3 +116,18 @@ plt.plot(kde_line(tabela_csgs_ls)[0],kde_line(tabela_csgs_ls)[1],color='xkcd:lig
 plt.ylabel("Frequência")
 plt.xlabel(r"$\Gamma_{max}$")
 plt.savefig('histograma_'+str(regul)+'.png', dpi=900)
+
+plt.rcParams.update({'font.size': 15})
+plt.figure(figsize=(7,6))
+plt.scatter(np.array(tabela_mcgs_ls["Mdyn"]), np.array(tabela_mcgs_ls["lim_sup"]), color='xkcd:cherry', s=0.7,label=r'MCGs, r={0:.2f}, $\tau={0:.2f}$ '.format(r_pearson_dyn_mcgs, tau_kendall_dyn_mcgs))
+plt.scatter(np.array(tabela_csgs_ls["Mdyn"]), np.array(tabela_csgs_ls["lim_sup"]), color='xkcd:green', s=0.7,label=r'CSGs, r={0:.2f}, $\tau={0:.2f}$ '.format(r_pearson_dyn_csgs, tau_kendall_dyn_csgs))
+plt.plot(mcgs_d[0],mcgs_d[1], linestyle='-.', marker='s', color='black')
+plt.plot(csgs_d[0],csgs_d[1], linestyle='-.', marker='o', color='black')
+plt.xticks([10.0, 10.5, 11, 11.5, 12])
+plt.yticks([0.5, 1, 1.5, 2.0, 2.5, 3, 3.5, 4])
+plt.ylim([0,4])
+plt.xlim([10.25, 12])
+plt.ylabel(r"$\Gamma_{max}$", fontsize=22)
+plt.xlabel(r"$\log{M_{dyn}}$ ($M_{\odot}$)", fontsize=22)
+plt.legend(loc ="lower right",fontsize=12)
+plt.savefig('limsupxlogdyn'+str(regul)+'.png', dpi=1200)

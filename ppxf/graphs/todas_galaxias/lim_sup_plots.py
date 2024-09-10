@@ -77,16 +77,19 @@ for i in range(0, len(tabela_mdyn)):
     lim=float(escolhe_raiz(raizes))
     if(i == 4):
         xis=np.arange(0, x[-1], 0.001)
+        plt.rcParams.update({'font.size': 15})
         plt.figure(figsize=(8,8))
         plt.scatter(x,np.array(y), color='xkcd:azure', s=35, label= 'Massa Calculada')
         plt.plot(xis,coef[0]*xis**2 + coef[1]*xis + coef[2], color='xkcd:red', label='Fit')
         plt.axhline(massas_dinamicas[i], color='xkcd:purple', label=r'$\log(M_{dyn}/M_\odot)$')
         plt.axvline(lim, color='xkcd:orange', label=r'$\Gamma_{max}$', linestyle='dashed')
-        plt.ylabel(r"$\log(M_{\star}/M_\odot)$", size=20)
-        plt.xlabel(r"$\Gamma$", size=20)
-        plt.legend(prop = { "size": 14 })
+        plt.xticks(np.arange(0, 3.6, 0.5), )
+        plt.yticks([10.9, 11, 11.1, 11.2, 11.3, 11.4])
+        plt.ylabel(r"$\log(M_{\star}/M_\odot)$", fontsize=25)
+        plt.xlabel(r"$\Gamma$", fontsize=25)
+        plt.legend(prop = { "size":15 })
         plt.grid()
-        plt.savefig('fit_example.png', dpi=300)
+        plt.savefig('fit_example.png', dpi=1200)
     limsup.append(lim)
 
 '''
