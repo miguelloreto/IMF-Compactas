@@ -1,14 +1,6 @@
 Star name: caT
 --------- Wavelenght range 1 ---------
-lmin = 8500.0, lmax = 8600.0
-nsig_up = 1.2, nsig_low = 0.3, degree = 1, span = 0.50, Nit = 3
---------- Wavelenght range 2 ---------
-lmin = 8600.0, lmax = 8700.0
-nsig_up = 6.0, nsig_low = 0.3, degree = 1, span = 0.50, Nit = 3
---------- Wavelenght range 3 ---------
-lmin = 8700.0, lmax = 8800.0
-nsig_up = 6.0, nsig_low = 0.3, degree = 1, span = 0.90, Nit = 3
+lmin = 5981.0, lmax = 6480.0
+nsig_up = 6.0, nsig_low = 0.5, degree = 1, span = 0.50, Nit = 5
 -----------------------------------
-Flux corrected for interval:  1
-Flux corrected for interval:  2
-Flux corrected for interval:  3
+Flux corrected for interval:  0

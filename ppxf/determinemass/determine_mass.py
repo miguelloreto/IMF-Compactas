@@ -16,7 +16,7 @@ regul=10
 #Qual foi a amostra utilizda?
 amostra = 'mcgs'
 
-cortadas_mcgs=['spec-0303-51615-0278']
+cortadas_mcgs=['spec-0303-51615-0278', 'spec-1949-53433-0280']
 #Quais galáxias tem seu espectro cortados (output do ppxf vai ser diferente):
 cortadas=['spec-0544-52201-0278','spec-0656-52148-0523', 'spec-0848-52669-0279', 'spec-1417-53141-0522', 'spec-1671-53446-0522', 'spec-1694-53472-0278']
 
@@ -65,7 +65,7 @@ determinemass_path=ppxf_path + '/determinemass'
 output_path=ppxf_path + '/output'
 amostra_path= output_path + '/' + amostra
 print('oi')
-spectra_path=ppxf_path + '/spectra'
+spectra_path=ppxf_path + '/samples/' + amostra
 os.chdir(determinemass_path) 
 tabela_mags=pd.read_csv("table_"+amostra+"_cassjobs_mags.csv")
 os.chdir(ppxf_path) 
@@ -107,7 +107,7 @@ outputs.sort()
 for i in outputs:
     i=i.split(".")
     if (i[-1] == 'out'):
-        if(i[0] in cortadas):
+        if(i[0] in cortadas_mcgs):
             selecionado='.'.join(i)
             spec=open(output_path+'/'+ selecionado, 'r')
             linhas=spec.readlines()
@@ -131,22 +131,22 @@ for i in outputs:
         continue
 print('oi')
 #Movendo os arquivos para bons lugares:
-#for i in outputs:
-#    i=i.split("-")
-#    if(i[0]=='spec'):shutil.move("-".join(i), amostra_path)
+for i in outputs:
+    i=i.split("-")
+    if(i[0]=='spec'):shutil.move("-".join(i), amostra_path)
 
-#os.chdir(amostra_path)
-#outputs_amostra=os.listdir(amostra_path)
-#outputs_amostra.sort()
+os.chdir(amostra_path)
+outputs_amostra=os.listdir(amostra_path)
+outputs_amostra.sort()
 
-#check_dir=False
-#for j in outputs_amostra: 
-#    if(j=='output_regul'+str(regul)+'_total-'+str(slope)): check_dir=True
-#if(check_dir==False): os.mkdir("output_regul"+str(regul)+"_total-" + str(slope))
+check_dir=False
+for j in outputs_amostra: 
+    if(j=='output_regul'+str(regul)+'_total-'+str(slope)): check_dir=True
+if(check_dir==False): os.mkdir("output_regul"+str(regul)+"_total-" + str(slope))
 
-#for k in outputs_amostra:
-#    k=k.split("-")
-#    if(k[0]=='spec'):shutil.move("-".join(k), amostra_path+'/output_regul'+str(regul)+'_total-'+str(slope))
+for k in outputs_amostra:
+    k=k.split("-")
+    if(k[0]=='spec'):shutil.move("-".join(k), amostra_path+'/output_regul'+str(regul)+'_total-'+str(slope))
 
 #Re-Normalizando:
 fator_norm=np.array(fator_norm_spectra)/np.array(fator_norm_ppxf)
@@ -167,7 +167,7 @@ idade_media_log_massa=[]
 metalicidade_media_massa=[]
 metalicidade_media_log_massa=[]
 
-
+k=0
 for i in lista_df_espectros:
     idade_media_luminosidade.append(calcula_media_ponderada(i['age'], i['x_j']))
     idade_media_log_luminosidade.append(calcula_media_ponderada_log(i['age'], i['x_j']))
@@ -237,11 +237,12 @@ tabela_massas['Mini']=np.log10(tabela_massas['Mini'])
 tabela_massas['Mcor']=tabela_massas['Mcor'].astype(float)
 tabela_massas['Mcor']=np.log10(tabela_massas['Mcor'])
 
+tabela_massas.to_csv('tudo.csv', index=False)
 
 #Escrevendo arquivos na pasta dos gráficos:
 #os.chdir(ppxf_path + '/graphs/todas_galaxias/'+ amostra + '/regul' + str(regul))
 #tabela_massas.to_csv('nomes_amostra_total.csv', index=False, columns=['Nome'], header='Nomes')
 #tabela_massas.to_csv('massas_{}_amostra_total.csv'.format(slope), index=False, columns=['Nome',"Mcor"], header=['Nome',str(slope)])
-os.chdir(ppxf_path+"graphs/todas_galaxias/analise_slope_1.3_salim")
-tabela_massas.to_csv('comparar_salim.csv'.format(slope),index=False, columns=['Nome', 'Mcor'], header=['Amostra', 'Mcor'])
+#os.chdir(ppxf_path+"graphs/todas_galaxias/analise_slope_1.3_salim")
+#tabela_massas.to_csv('comparar_salim.csv'.format(slope),index=False, columns=['Nome', 'Mcor'], header=['Amostra', 'Mcor'])
 #Opção para comparar com as massas do salim
