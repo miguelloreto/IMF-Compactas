@@ -1,0 +1,2 @@
+centralmin,5876.875
+centralmax,5909.375

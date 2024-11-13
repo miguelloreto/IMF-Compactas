@@ -15,7 +15,7 @@ write(sprintf('Star name: %s', star_name), file = log_file)
 # PARAMETERS FOR NORMALIZATION
 # -----------------------------------------------
 #################################################
-l_breaks = c(5981, 6480) #n de cortes no espectro
+l_breaks = c(5982, 6479) #n de cortes no espectro
 Nparts = length(l_breaks) - 1 
 flag_norm = vector(length = Nparts); flag_norm[] = 1
 nsig_up_b = vector(length = Nparts); nsig_up_b[] = 6 
@@ -31,9 +31,9 @@ factor_number = 0.037
 
 # -----------------------------------------------
 #################################################
-spec_in_file = 'SSP_Fe+0.13_a+0.00_C+0.00_N+0.00_O+0.00_Mg+0.00_Si+0.00_Ca+0.00_Ti+0.00_Na+0.00_Al+0.00_Ba+0.00_Eu+0.00_age09.0_slope3.30'
-spec_out_file = 'tiO2imf.out'
-fig_out_file = 'fig.pdf' 
+spec_in_file = 'SSP_Fe+0.13_a+0.40_C+0.00_N+0.00_O+0.00_Mg+0.00_Si+0.00_Ca+0.00_Ti+0.00_Na+0.00_Al+0.00_Ba+0.00_Eu+0.00_age09.0_slope1.30'
+spec_out_file = 'tiO2alfa.out'
+fig_out_file = 'tiO2alfa.pdf' 
 
 spec_in = read.table(spec_in_file)
 spec_in$V3 <- rep(1e-6, times=length(spec_in$V1))  #Inserindo coluna de erro, quanto deve ser o erro?
