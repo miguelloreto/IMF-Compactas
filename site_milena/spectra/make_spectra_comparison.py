@@ -13,14 +13,18 @@ def plota_spec(base, chem, imf, il, fl, nome_linha):
   basex, basey = base['lambda'], base['flux_norm']
   chemx, chemy = chem['lambda'], chem['flux_norm']
   imfx, imfy = imf['lambda'], imf['flux_norm']
+  comp_chem=(chemy-basey)/basey
+  comp_imf=(imfy-basey)/basey
+  comp=chemy-imfy
   g1=plt.figure(figsize=(8,8))
   plt.title(nome_linha)
   plt.xlabel('$\lambda$($\AA$)')
-  plt.ylabel('Fluxo Normalizado') #($erg/cm^2/s/A$)
+  plt.ylabel('Diferença absoluta') #($erg/cm^2/s/A$)
   plt.xlim([il,fl])
-  plt.plot(basex, basey, color='red', label='Base',linewidth=0.5)
-  plt.plot(chemx,chemy, color='green', label='Abundância',linewidth=0.5)
-  plt.plot(imfx, imfy ,color='blue', label='IMF',linewidth=0.5)
+  plt.ylim(-0.1, 0.1)
+  plt.plot(chemx,comp_chem, color='green', label='Abundância',linewidth=0.5)
+  plt.plot(imfx, comp_imf ,color='blue', label='IMF',linewidth=0.5)
+  plt.plot(imfx,comp, color='orange', label='IMF-Abundância', linewidth=0.5)
   plt.legend()
   plt.savefig(nome_linha+'.png')
 
@@ -32,8 +36,9 @@ for i in index:
         continue
     else:
       os.chdir(index_path)
-      norms.sort()
+      info=[i for i in index_dir if i.__contains__('.txt')]
+      info=pd.read_csv(info[0], header=None, names=['name_info', 'info'])
       alfa=pd.read_csv(norms[0], sep=' ')
       base=pd.read_csv(norms[1], sep=' ')
       imf=pd.read_csv(norms[2], sep=' ')
-    plota_spec(base, alfa, imf, base['lambda'].iloc[2], base['lambda'].iloc[-1], i)
+    plota_spec(base, alfa, imf, info['info'].iloc[0], info['info'].iloc[1], i)
