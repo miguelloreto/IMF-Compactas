@@ -1,2 +1,6 @@
 centralmin,6189.625
 centralmax,6272.125
+bluecontmin,6066.625
+bluecontmax,6141.625
+redcontmin,6422.0
+redcontmax,6455.0

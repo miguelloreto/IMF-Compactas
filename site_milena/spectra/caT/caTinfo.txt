@@ -1,2 +1,6 @@
 centralmin,8522
 centralmax,8562
+bluecontmin,8474 
+bluecontmax,8484
+redcontmin,8563.0
+redcontmax,8577.0

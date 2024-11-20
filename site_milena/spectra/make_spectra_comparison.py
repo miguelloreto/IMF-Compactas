@@ -9,36 +9,73 @@ spectra_path=os.getcwd()
 spectra_dir=os.listdir(spectra_path)
 index=[i for i in spectra_dir if not i.__contains__('.')]
 
-def plota_spec(base, chem, imf, il, fl, nome_linha):
-  basex, basey = base['lambda'], base['flux_norm']
-  chemx, chemy = chem['lambda'], chem['flux_norm']
-  imfx, imfy = imf['lambda'], imf['flux_norm']
+def plota_spec(base, chem, imf, info_linha, nome_linha):
+        
+  centralmin, centralmax, bluemin, bluemax, redmin, redmax= info['info'].iloc[0],info['info'].iloc[1],info['info'].iloc[2],info['info'].iloc[3],info['info'].iloc[4],info['info'].iloc[5],
+  basex, basey = base['lambda'], base['fluxo']
+  chemx, chemy = chem['lambda'], chem['fluxo']
+  imfx, imfy = imf['lambda'], imf['fluxo']
+  minimo=np.min(chemy)
+  maximo=np.max(chemy)
   comp_chem=(chemy-basey)/basey
   comp_imf=(imfy-basey)/basey
-  comp=chemy-imfy
-  g1=plt.figure(figsize=(8,8))
-  plt.title(nome_linha)
-  plt.xlabel('$\lambda$($\AA$)')
-  plt.ylabel('Diferença absoluta') #($erg/cm^2/s/A$)
-  plt.xlim([il,fl])
-  plt.ylim(-0.1, 0.1)
-  plt.plot(chemx,comp_chem, color='green', label='Abundância',linewidth=0.5)
-  plt.plot(imfx, comp_imf ,color='blue', label='IMF',linewidth=0.5)
-  plt.plot(imfx,comp, color='orange', label='IMF-Abundância', linewidth=0.5)
-  plt.legend()
-  plt.savefig(nome_linha+'.png')
+  minimo_comp=np.min(comp_chem)
+  maximo_comp=np.max(comp_chem)
+  fig, (ax1, ax2)=plt.subplots(nrows=2,ncols=1)
+  fig.suptitle(nome_linha)
+  ax1.plot(basex, basey, color='xkcd:black', lw=1.8)
+  ax1.plot(chemx, chemy, color='xkcd:primary blue')
+  ax1.plot(imfx, imfy, color='xkcd:strong pink')
+  ax1.set_xlim(bluemin-20, redmax+20)
+  ax1.legend(labels=[r'Base', r'$[α/Fe]$', r'IMF'] ,loc="upper right")
+  ax1.set_xlabel(r' $\lambda$($\AA$)')
+  ax1.set_ylabel(r'Fluxo Normalizado')
+  ax1.set_ylim(minimo -0.15*minimo, maximo +0.05*maximo)
+  ax1.fill_betweenx([0,1.2], bluemin, bluemax, facecolor='blue', edgecolor='black', hatch='|', alpha=0.4)
+  ax1.fill_betweenx([0,1.2], centralmin, centralmax, facecolor='xkcd:indigo', edgecolor='black',hatch='|', alpha=0.4)
+  ax1.fill_betweenx([0,1.2], redmin, redmax, facecolor='red',edgecolor='black',hatch='|', alpha=0.4)
+
+  ax2.plot(chemx, comp_chem, color='xkcd:primary blue')
+  ax2.plot(imfx, comp_imf, color='xkcd:strong pink')
+  ax2.set_xlim(bluemin-20, redmax+20)
+  ax2.legend(labels=[r'$[α/Fe]$', r'IMF'], loc="upper right")
+  ax2.set_xlabel(r' $\lambda$($\AA$)')
+  ax2.set_ylabel(r' $\Delta$Fluxo / Fluxo')
+  ax2.set_ylim(minimo_comp -0.15*minimo_comp, maximo_comp +0.05*maximo_comp)
+  ax2.fill_betweenx([-1,1], bluemin, bluemax, facecolor='blue',edgecolor='black',hatch='|', alpha=0.4)
+  ax2.fill_betweenx([-1,1], centralmin, centralmax, facecolor='xkcd:indigo', edgecolor='black',hatch='|',alpha=0.4)
+  ax2.fill_betweenx([-1,1], redmin, redmax, facecolor='red',edgecolor='black', hatch='|', alpha=0.4)
+
+  plt.subplots_adjust(hspace=0.4)
+  fig.set_figheight(5)
+  fig.set_figwidth(20)
+  fig.savefig(nome_linha+'.png', bbox_inches='tight')
+
+def normaliza_continuo_simples(lnorm_min, lnorm_max, espectro):
+  espectro.columns=['lambda','fluxo']
+  bluecont=espectro['lambda'].between(lnorm_min, lnorm_max, inclusive='both')
+  fluxo_bluecont=espectro['fluxo'][bluecont.values]
+  for i in range(1, 10):
+    bluecont= fluxo_bluecont > (fluxo_bluecont.median() - 0.5*fluxo_bluecont.std()) #pd.Series de boleanos onde fluxobluecont é maior do que a mediana de fluxo blue cont menos metade de seu dp
+    fluxo_bluecont=fluxo_bluecont[bluecont.values]
+  cont=fluxo_bluecont.median()
+  espectro['fluxo']=espectro['fluxo']/cont
+  return(espectro)
 
 for i in index:
     index_path=spectra_path+'/'+i
     index_dir=os.listdir(index_path)
-    norms=[i for i in index_dir if i.__contains__('.out')]
-    if len(norms) == 0:
+    ssps=[i for i in index_dir if i.__contains__('SSP')]
+    if len(ssps) == 0:
         continue
     else:
       os.chdir(index_path)
       info=[i for i in index_dir if i.__contains__('.txt')]
       info=pd.read_csv(info[0], header=None, names=['name_info', 'info'])
-      alfa=pd.read_csv(norms[0], sep=' ')
-      base=pd.read_csv(norms[1], sep=' ')
-      imf=pd.read_csv(norms[2], sep=' ')
-    plota_spec(base, alfa, imf, info['info'].iloc[0], info['info'].iloc[1], i)
+      alfa=pd.read_csv(ssps[0], sep='\s+', skiprows=1, header=None)
+      imf=pd.read_csv(ssps[1], sep='\s+', skiprows=1, header=None)
+      base=pd.read_csv(ssps[2], sep='\s+', skiprows=1, header=None)
+    base=normaliza_continuo_simples(info['info'].iloc[2], info['info'].iloc[3], base)
+    alfa=normaliza_continuo_simples(info['info'].iloc[2], info['info'].iloc[3], alfa)
+    imf=normaliza_continuo_simples(info['info'].iloc[2], info['info'].iloc[3], imf)
+    plota_spec(base, alfa, imf, info, i)
