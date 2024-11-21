@@ -10,17 +10,14 @@ spectra_dir=os.listdir(spectra_path)
 index=[i for i in spectra_dir if not i.__contains__('.')]
 
 def plota_spec(base, chem, imf, info_linha, nome_linha):
-        
   centralmin, centralmax, bluemin, bluemax, redmin, redmax= info['info'].iloc[0],info['info'].iloc[1],info['info'].iloc[2],info['info'].iloc[3],info['info'].iloc[4],info['info'].iloc[5],
   basex, basey = base['lambda'], base['fluxo']
   chemx, chemy = chem['lambda'], chem['fluxo']
   imfx, imfy = imf['lambda'], imf['fluxo']
-  minimo=np.min(chemy)
-  maximo=np.max(chemy)
   comp_chem=(chemy-basey)/basey
   comp_imf=(imfy-basey)/basey
-  minimo_comp=np.min(comp_chem)
-  maximo_comp=np.max(comp_chem)
+  minimo=np.min(chemy)
+  maximo=np.max(chemy)
   fig, (ax1, ax2)=plt.subplots(nrows=2,ncols=1)
   fig.suptitle(nome_linha)
   ax1.plot(basex, basey, color='xkcd:black', lw=1.8)
@@ -41,14 +38,14 @@ def plota_spec(base, chem, imf, info_linha, nome_linha):
   ax2.legend(labels=[r'$[α/Fe]$', r'IMF'], loc="upper right")
   ax2.set_xlabel(r' $\lambda$($\AA$)')
   ax2.set_ylabel(r' $\Delta$Fluxo / Fluxo')
-  ax2.set_ylim(-0.18, 0.18)
-  ax2.set_yticks([-0.15, -0.1, -0.05, 0, 0.05, 0.1, 0.15])
+  ax2.set_ylim(-0.1, 0.1)
   ax2.axhline(-0.05, ls='--', lw=1.3, color='xkcd:dark')
   ax2.axhline(0.05, ls='--', lw=1.3, color='xkcd:dark')
   ax2.axhline(0, ls='dotted', lw=1, color='xkcd:dark')
   ax2.fill_betweenx([-1,1], bluemin, bluemax, facecolor='xkcd:gunmetal',edgecolor='black', alpha=0.4)
   ax2.fill_betweenx([-1,1], centralmin, centralmax, facecolor='xkcd:greyish', edgecolor='black',alpha=0.4)
   ax2.fill_betweenx([-1,1], redmin, redmax, facecolor='xkcd:gunmetal',edgecolor='black', alpha=0.4)
+
   plt.subplots_adjust(hspace=0.4)
   fig.set_figheight(5)
   fig.set_figwidth(20)
@@ -58,7 +55,7 @@ def normaliza_continuo_simples(lnorm_min, lnorm_max, espectro):
   espectro.columns=['lambda','fluxo']
   bluecont=espectro['lambda'].between(lnorm_min, lnorm_max, inclusive='both')
   fluxo_bluecont=espectro['fluxo'][bluecont.values]
-  for i in range(1, 10):
+  for i in range(1, 7):
     bluecont= fluxo_bluecont > (fluxo_bluecont.median() - 0.5*fluxo_bluecont.std()) #pd.Series de boleanos onde fluxobluecont é maior do que a mediana de fluxo blue cont menos metade de seu dp
     fluxo_bluecont=fluxo_bluecont[bluecont.values]
   cont=fluxo_bluecont.median()
@@ -78,6 +75,7 @@ for i in index:
       alfa=pd.read_csv(ssps[0], sep='\s+', skiprows=1, header=None)
       imf=pd.read_csv(ssps[1], sep='\s+', skiprows=1, header=None)
       base=pd.read_csv(ssps[2], sep='\s+', skiprows=1, header=None)
+
     base=normaliza_continuo_simples(info['info'].iloc[2], info['info'].iloc[3], base)
     alfa=normaliza_continuo_simples(info['info'].iloc[2], info['info'].iloc[3], alfa)
     imf=normaliza_continuo_simples(info['info'].iloc[2], info['info'].iloc[3], imf)

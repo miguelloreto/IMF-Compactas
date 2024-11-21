@@ -49,6 +49,7 @@ def plota_spec(base, chem, imf, info_linha, nome_linha):
   ax2.fill_betweenx([-1,1], bluemin, bluemax, facecolor='xkcd:gunmetal',edgecolor='black', alpha=0.4)
   ax2.fill_betweenx([-1,1], centralmin, centralmax, facecolor='xkcd:greyish', edgecolor='black',alpha=0.4)
   ax2.fill_betweenx([-1,1], redmin, redmax, facecolor='xkcd:gunmetal',edgecolor='black', alpha=0.4)
+
   plt.subplots_adjust(hspace=0.4)
   fig.set_figheight(5)
   fig.set_figwidth(20)
