@@ -40,6 +40,9 @@ for i in range(0, len(lambdacriado)):
   #Essa próxima linha de código?
   j=np.where(np.logical_and(lambdacriado<=(lambdacriado[i]+intervalo), lambdacriado>=(lambdacriado[i]-intervalo)))
   #Nossa psf é nossa gaussiana:
+  print(type(j))
+  #print(lambdacriado[j])
+  #print(type(lambdacriado[j]))
   psf=gaussiana(lambdacriado[i], lambdacriado[j], deltalambda[i])
   #Essa é a integral. len(psf)=len(fluxointerpolado[j]). Multiplica os vetores (definição de convolução) e integra (soma o valor da função multiplicada naquele ponto) com o np.sum().
   convoluido[i]=np.sum(psf*fluxomodelointerpolado[j])
