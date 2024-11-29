@@ -1,6 +1,6 @@
 remove(list = ls())
 
-print(Sys.time())
+#print(Sys.time())
 
 #-----------------------------------
 # Functions
@@ -8,7 +8,7 @@ print(Sys.time())
 
 source('interp.R')
 
-for(model_type in c('ref', 'afe', 'imf')){
+for(model_type in c('ref')){
   #-----------------------------------
   # SOME DEFINITIONS
   #-----------------------------------
@@ -16,21 +16,21 @@ for(model_type in c('ref', 'afe', 'imf')){
   sigma_out_kms = 160  # Desired resolution, in km/s
   delta_sampl = 1  # Sampling of the output spectrum, in Angstroms
   folder = 'tiO1' 
-  # model_type = 'afe'  # ref, imf or afe
+  model_type = 'ref'  # ref, imf or afe
   
   #-----------------------------------
   # Input/output files
   #-----------------------------------
-  if(model_type == 'ref'){
-    input_spec = read.table(sprintf('%s/SSP_Fe+0.13_a+0.00_C+0.00_N+0.00_O+0.00_Mg+0.00_Si+0.00_Ca+0.00_Ti+0.00_Na+0.00_Al+0.00_Ba+0.00_Eu+0.00_age09.0_slope1.30', folder))
-  }
-  if(model_type == 'imf'){
-    input_spec = read.table(sprintf('%s/SSP_Fe+0.13_a+0.00_C+0.00_N+0.00_O+0.00_Mg+0.00_Si+0.00_Ca+0.00_Ti+0.00_Na+0.00_Al+0.00_Ba+0.00_Eu+0.00_age09.0_slope3.30', folder))
-  }
-  if(model_type == 'afe'){
-    input_spec = read.table(sprintf('%s/SSP_Fe+0.13_a+0.40_C+0.00_N+0.00_O+0.40_Mg+0.40_Si+0.40_Ca+0.40_Ti+0.40_Na+0.00_Al+0.00_Ba+0.00_Eu+0.00_age09.0_slope1.30', folder))
-  }
-  output_file = sprintf('%s/conv_feh_0.13/spec_%s_conv%.0f.txt', folder, model_type, sigma_out_kms)
+  #if(model_type == 'ref'){
+  input_spec = read.table(sprintf('%s/SSP_Fe+0.13_a+0.00_C+0.00_N+0.00_O+0.00_Mg+0.00_Si+0.00_Ca+0.00_Ti+0.00_Na+0.00_Al+0.00_Ba+0.00_Eu+0.00_age09.0_slope1.30', folder))
+  #}
+  #if(model_type == 'imf'){
+  #  input_spec = read.table(sprintf('%s/SSP_Fe+0.13_a+0.00_C+0.00_N+0.00_O+0.00_Mg+0.00_Si+0.00_Ca+0.00_Ti+0.00_Na+0.00_Al+0.00_Ba+0.00_Eu+0.00_age09.0_slope3.30', folder))
+  #}
+  #if(model_type == 'afe'){
+  #  input_spec = read.table(sprintf('%s/SSP_Fe+0.13_a+0.40_C+0.00_N+0.00_O+0.40_Mg+0.40_Si+0.40_Ca+0.40_Ti+0.40_Na+0.00_Al+0.00_Ba+0.00_Eu+0.00_age09.0_slope1.30', folder))
+  #}
+  output_file = sprintf('%s/spec_%s_conv%.0f.txt', folder, model_type, sigma_out_kms)
   
   
   # input_spec = read.table('CaT/SSP_Fe+0.40_a+0.00_C+0.00_N+0.00_O+0.00_Mg+0.00_Si+0.00_Ca+0.00_Ti+0.00_Na+0.00_Al+0.00_Ba+0.00_Eu+0.00_age09.0_slope1.30')
@@ -52,7 +52,7 @@ for(model_type in c('ref', 'afe', 'imf')){
   sigma_out = sigma_out_kms / 3e5 * lambda
   sigma_conv = sqrt(sigma_out**2 - sigma_in**2)
   sigma_conv[(sigma_out**2 - sigma_in**2) <= 0] = 0.001
-  
+  print(sigma_conv[1])
   #-----------------------------------
   # CONVOLUTION
   #-----------------------------------
@@ -68,6 +68,7 @@ for(model_type in c('ref', 'afe', 'imf')){
         psf = exp(-((lambda[n] - lambda[m]) / sigma_conv[n])**2 / 2)
         flux_conv[n] = flux_conv[n] + flux[m] * psf / norm_psf
       }
+    #print(sigma_conv)
     }
     # ------------------------------------------------------------------
     # METHOD 2
@@ -86,7 +87,10 @@ for(model_type in c('ref', 'afe', 'imf')){
     #   psf = exp(-((lambda[n] - lambda[m]) / sigma_conv[n])**2 / 2) / (sigma_conv[n] * sqrt(2 * pi)) * (lambda[m+1] - lambda[m])
     #   flux_conv[n] = flux_conv[n] + flux[m] * psf
     # }
+  #print(m)
   }
+  print(head(flux_conv,5))
+  print(tail(flux_conv,5))
   
   c#-----------------------------------
   # REBIN
@@ -120,6 +124,6 @@ for(model_type in c('ref', 'afe', 'imf')){
   # lines(lambda, flux/median(flux[xx.xx]))
   # legend('bottomright', c('Input', 'Output convolved'), col = c('black', 'red'), bty = 'n', cex = 1.6, lty = 1)
   
-  print(Sys.time())
+  #print(Sys.time())
 }
 

@@ -33,18 +33,9 @@ convoluido=np.zeros(len(lambdacriado))
 j=[]
 
 for i in range(0, len(lambdacriado)):
-  #Definindo um intervalo de corte
   intervalo=20*deltalambda[i]
-  #Vetor j definido para cortar a gaussiana. Ela vale 0 para valores muito distantes de lambda_0 por isso vamos centrando ela dentro de um intervalo.
-  #Tentei fazer isso com um if mas é muito demorado e não funciona.
-  #Essa próxima linha de código?
   j=np.where(np.logical_and(lambdacriado<=(lambdacriado[i]+intervalo), lambdacriado>=(lambdacriado[i]-intervalo)))
-  #Nossa psf é nossa gaussiana:
-  print(type(j))
-  #print(lambdacriado[j])
-  #print(type(lambdacriado[j]))
   psf=gaussiana(lambdacriado[i], lambdacriado[j], deltalambda[i])
-  #Essa é a integral. len(psf)=len(fluxointerpolado[j]). Multiplica os vetores (definição de convolução) e integra (soma o valor da função multiplicada naquele ponto) com o np.sum().
   convoluido[i]=np.sum(psf*fluxomodelointerpolado[j])
 
 
