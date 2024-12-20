@@ -4,6 +4,10 @@ import sys
 import shutil
 import pandas as pd
 import os
+plt.rcParams['xtick.labelsize'] = 20
+plt.rcParams['ytick.labelsize'] = 20
+plt.rcParams['legend.fontsize'] =20
+
 
 spectra_path=os.getcwd()
 spectra_dir=os.listdir(spectra_path)
@@ -22,14 +26,14 @@ def plota_spec(base, chem, imf, info_linha, nome_linha):
   minimo_comp=np.min(comp_chem)
   maximo_comp=np.max(comp_chem)
   fig, (ax1, ax2)=plt.subplots(nrows=2,ncols=1)
-  fig.suptitle(nome_linha)
+  fig.suptitle(nome_linha, fontsize=25)
   ax1.plot(basex, basey, color='xkcd:black', lw=1.8)
   ax1.plot(chemx, chemy, color='xkcd:primary blue')
   ax1.plot(imfx, imfy, color='xkcd:cherry red')
   ax1.set_xlim(bluemin-20, redmax+20)
-  ax1.legend(labels=[r'Base', r'$[α/Fe]$', r'IMF'] ,loc="upper right")
-  ax1.set_xlabel(r' $\lambda$($\AA$)')
-  ax1.set_ylabel(r'Fluxo Normalizado')
+  ax1.legend(labels=[r'Base', r'$[α/Fe]$', r'IMF'] ,loc="lower right")
+  ax1.set_xlabel(r' $\lambda$($\AA$)', fontsize=22)
+  ax1.set_ylabel(r'Fluxo Normalizado', fontsize=22)
   ax1.set_ylim(minimo -0.15*minimo, maximo +0.05*maximo)
   ax1.fill_betweenx([0,1.2], bluemin, bluemax, facecolor='xkcd:gunmetal', edgecolor='black', alpha=0.4)
   ax1.fill_betweenx([0,1.2], centralmin, centralmax, facecolor='xkcd:greyish', edgecolor='black', alpha=0.4)
@@ -38,9 +42,9 @@ def plota_spec(base, chem, imf, info_linha, nome_linha):
   ax2.plot(chemx, comp_chem, color='xkcd:primary blue')
   ax2.plot(imfx, comp_imf, color='xkcd:cherry red')
   ax2.set_xlim(bluemin-20, redmax+20)
-  ax2.legend(labels=[r'$[α/Fe]$', r'IMF'], loc="upper right")
-  ax2.set_xlabel(r' $\lambda$($\AA$)')
-  ax2.set_ylabel(r' $\Delta$Fluxo / Fluxo')
+  ax2.legend(labels=[r'$[α/Fe]$', r'IMF'], loc="lower right")
+  ax2.set_xlabel(r' $\lambda$($\AA$)', fontsize=22)
+  ax2.set_ylabel(r' $\Delta$Fluxo / Fluxo', fontsize=22)
   ax2.set_ylim(-0.18, 0.18)
   ax2.set_yticks([-0.15, -0.1, -0.05, 0, 0.05, 0.1, 0.15])
   ax2.axhline(-0.05, ls='--', lw=1.3, color='xkcd:dark')
@@ -51,9 +55,9 @@ def plota_spec(base, chem, imf, info_linha, nome_linha):
   ax2.fill_betweenx([-1,1], redmin, redmax, facecolor='xkcd:gunmetal',edgecolor='black', alpha=0.4)
 
   plt.subplots_adjust(hspace=0.4)
-  fig.set_figheight(5)
+  fig.set_figheight(8)
   fig.set_figwidth(20)
-  fig.savefig(nome_linha+'.png', bbox_inches='tight')
+  fig.savefig(nome_linha+'highres.png', bbox_inches='tight')
 
 def normaliza_continuo_simples(lnorm_min, lnorm_max, espectro):
   espectro.columns=['lambda','fluxo']

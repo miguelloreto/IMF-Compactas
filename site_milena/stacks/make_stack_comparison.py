@@ -4,10 +4,13 @@ from scipy.interpolate import CubicSpline
 import pandas as pd
 import os
 import math
+plt.rcParams['xtick.labelsize'] = 20
+plt.rcParams['ytick.labelsize'] = 20
+plt.rcParams['legend.fontsize'] = 20
 
 c=3e5 #Velocidade da luz em Km/s
 pi=np.pi
-sigmas=[160, 300]
+sigmas=[180, 300]
 
 stack_path=os.getcwd()
 stack_dir=os.listdir(stack_path)
@@ -70,38 +73,39 @@ def plota_spec(ref, observado, base, alfa, imf, info, nome_linha):
   alfa_l, alfa_h=extract_data(alfa)
   ref_x, ref_y=ref['lam'], ref['fluxo'] 
   fig, (ax1, ax2)=plt.subplots(nrows=2,ncols=1)
-  fig.suptitle(nome_linha)
+  fig.suptitle(nome_linha, fontsize=25)
   ax1.plot(ref_x, ref_y, color='xkcd:dusty blue', lw=0.8)
   ax1.plot(base_l[0], base_l[1], color='xkcd:black')
   ax1.plot(alfa_l[0], alfa_l[1], color='xkcd:primary blue')
   ax1.plot(imf_l[0], imf_l[1], color='xkcd:cherry red')
-  ax1.plot(observado_l[0], observado_l[1], color='xkcd:green', ls='dotted')
+  ax1.plot(5842, 0.6, marker='vl')
+  ax1.plot(observado_l[0], observado_l[1], color='xkcd:green', ls='dashed', lw=2.5)
   ax1.set_xlim(bluemin-5, redmax+5)
-  ax1.legend(labels=[r'Observado', r'Base', r'$[α/Fe]$', r'IMF', r'Sintético']  ,loc="lower right")
-  ax1.set_xlabel(r' $\lambda$($\AA$)')
-  ax1.set_ylabel(r'Fluxo Normalizado')
+  ax1.legend(labels=[r'Sintético', r'Base', r'$[α/Fe]$', r'IMF', r'Observado']  ,loc="lower right")
+  ax1.set_xlabel(r' $\lambda$($\AA$)', fontsize=22)
+  ax1.set_ylabel(r'Fluxo Normalizado', fontsize=22)
   ax1.set_ylim(0.55, 1.1)
   ax1.fill_betweenx([0,1.2], bluemin, bluemax, facecolor='xkcd:gunmetal', edgecolor='black', alpha=0.4)
   ax1.fill_betweenx([0,1.2], centralmin, centralmax, facecolor='xkcd:greyish', edgecolor='black', alpha=0.4)
   ax1.fill_betweenx([0,1.2], redmin, redmax, facecolor='xkcd:gunmetal',edgecolor='black', alpha=0.4)
-  ax1.text(bluemax+5, 0.6, r'σ=160km/s', fontsize=12)
+  ax1.text(bluemax+2.5, 0.6, r'σ=180km/s', fontsize=18)
 
   ax2.plot(ref_x, ref_y, color='xkcd:dusty blue', lw=0.8)
   ax2.plot(base_h[0], base_h[1], color='xkcd:black')
   ax2.plot(alfa_h[0], alfa_h[1], color='xkcd:primary blue')
   ax2.plot(imf_h[0], imf_h[1], color='xkcd:cherry red')
-  ax2.plot(observado_h[0], observado_h[1], color='xkcd:green', ls='dotted')
+  ax2.plot(observado_h[0], observado_h[1], color='xkcd:green', ls='dashed', lw=2.5)
   ax2.set_xlim(bluemin-5, redmax+5)
-  ax2.legend(labels=[r'Observado', r'Base', r'$[α/Fe]$', r'IMF', r'Sintético']  ,loc="lower right")
-  ax2.set_xlabel(r' $\lambda$($\AA$)')
-  ax2.set_ylabel(r'Fluxo Normalizado')
+  ax2.legend(labels=[r'Sintético', r'Base', r'$[α/Fe]$', r'IMF', r'Observado']  ,loc="lower right")
+  ax2.set_xlabel(r' $\lambda$($\AA$)', fontsize=22)
+  ax2.set_ylabel(r'Fluxo Normalizado', fontsize=22)
   ax2.set_ylim(0.55, 1.1)
   ax2.fill_betweenx([0,1.2], bluemin, bluemax, facecolor='xkcd:gunmetal', edgecolor='black', alpha=0.4)
   ax2.fill_betweenx([0,1.2], centralmin, centralmax, facecolor='xkcd:greyish', edgecolor='black', alpha=0.4)
   ax2.fill_betweenx([0,1.2], redmin, redmax, facecolor='xkcd:gunmetal',edgecolor='black', alpha=0.4)
-  ax2.text(bluemax+5,0.6, r'σ=300km/s', fontsize=12)
+  ax2.text(bluemax+2.5,0.6, r'σ=300km/s', fontsize=18)
   plt.subplots_adjust(hspace=0.4)
-  fig.set_figheight(5)
+  fig.set_figheight(8)
   fig.set_figwidth(20)
   fig.savefig(nome_linha+'.png', bbox_inches='tight')
 
@@ -111,8 +115,8 @@ for i in range(0, len(stacks)):
   stackado=stackado[stackado.fluxo > 0]
   stacks[i]=stackado
 
-#print(index)
-#index=[index[5], 'mg4780']
+print(index)
+
 for i in index:
     index_path=stack_path+'/'+i
     index_dir=os.listdir(index_path)
@@ -144,10 +148,16 @@ for i in index:
       base_sigma[j]=normaliza_continuo_simples(info['info'].iloc[2], info['info'].iloc[3],info['info'].iloc[4],info['info'].iloc[5], base_sigma[j])
       alfa_sigma[j]=normaliza_continuo_simples(info['info'].iloc[2], info['info'].iloc[3],info['info'].iloc[4],info['info'].iloc[5], alfa_sigma[j])
       imf_sigma[j]=normaliza_continuo_simples(info['info'].iloc[2], info['info'].iloc[3],info['info'].iloc[4],info['info'].iloc[5], imf_sigma[j])
+      base.to_csv('sintetico.csv', index=False)
+      base_sigma[j].to_csv('ref'+str(sigmas[j])+'.csv', index=False)
+      alfa_sigma[j].to_csv('alfa'+str(sigmas[j])+'.csv', index=False)
+      imf_sigma[j].to_csv('imf'+str(sigmas[j])+'.csv', index=False)
+
 
     stacks_normalizados=[]
+    l=0
     for stack in stacks:
       stack_norm=normaliza_continuo_simples(info['info'].iloc[2], info['info'].iloc[3],info['info'].iloc[4],info['info'].iloc[5], stack)
-      stacks_normalizados.append(stack_norm)
-
-    plota_spec(base, stacks_normalizados, base_sigma, alfa_sigma, imf_sigma, info, i)
+      stack_norm.to_csv('empilhado'+str(sigmas[l])+'.csv', index=False)
+      l=l+1
+    #plota_spec(base, stacks_normalizados, base_sigma, alfa_sigma, imf_sigma, info, i)
