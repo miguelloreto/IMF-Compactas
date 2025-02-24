@@ -1,8 +1,5 @@
-# Ignorar arquivos
-
-
+### Ignorar arquivos ###
 # Imagens:
-
 *.png
 **/*.png
 
@@ -11,3 +8,6 @@
 **/*.zip
 *.tar
 **/*.tar
+
+# Vscode:
+.vscode/*
